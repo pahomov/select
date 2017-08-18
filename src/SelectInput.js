@@ -1,14 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export default class MultiSelectInput extends React.PureComponent {
+export default class SelectInput extends React.PureComponent {
   render() {
     return (
       <Container onClick={this.props.onClick}>
-        {this.props.value.length
-          ? this.props.value
-              .map(v => this.props.items.find(i => i.value === v).label)
-              .join(' ')
+        {this.props.value
+          ? this.props.items.find(i => i.value === this.props.value).label
           : `ʕ•ᴥ•ʔ`}
       </Container>
     );

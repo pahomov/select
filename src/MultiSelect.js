@@ -3,29 +3,30 @@ import MultiSelectInput from './MultiSelectInput';
 import MultiSelectItem from './MultiSelectItem';
 import MultiSelectItems from './MultiSelectItems';
 import Popup from './Popup';
-import styled from 'styled-components';
 
 export default class MultiSelect extends React.PureComponent {
   render() {
     return (
-      <Container>
+      <Popup isOpen={this.state.isOpen} onReject={this.handleReject}>
         <MultiSelectInput
           value={this.props.value}
+          items={this.props.items}
           onClick={this.handleOpenClose}
         />
-        <Popup isOpen={this.state.isOpen} onClose={this.handleClose}>
-          <MultiSelectItems>
-            {this.props.items.map(item =>
-              <MultiSelectItem
-                key={item.value}
-                {...item}
-                onChange={this.handleItemChange}
-                checked={this.state.value.includes(item.value)}
-              />,
-            )}
-          </MultiSelectItems>
-        </Popup>
-      </Container>
+        <MultiSelectItems
+          onAccept={this.handleAccept}
+          onReject={this.handleReject}
+        >
+          {this.props.items.map(item =>
+            <MultiSelectItem
+              key={item.value}
+              {...item}
+              onChange={this.handleItemChange}
+              checked={this.state.value.includes(item.value)}
+            />,
+          )}
+        </MultiSelectItems>
+      </Popup>
     );
   }
 
@@ -46,13 +47,15 @@ export default class MultiSelect extends React.PureComponent {
     this.setState({ isOpen: !this.state.isOpen });
   };
 
-  handleClose = () => {
+  handleAccept = () => {
     this.setState({ isOpen: false });
     if (this.state.value !== this.props.value)
       this.props.onChange(this.state.value);
   };
+
+  handleReject = () => {
+    this.setState({ isOpen: false, value: this.props.value });
+  };
 }
 
 const isMobile = () => window.matchMedia('(max-width: 767px)').matches;
-
-const Container = styled.div``;
